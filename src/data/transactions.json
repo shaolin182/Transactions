@@ -1,0 +1,129 @@
+[
+	{
+		"date": "2017-02-04T00:00:00.000Z",
+		"label": "",
+		"outcome": 873.06,
+		"income": 0,
+		"category": {
+			"categoryid" : 1,
+			"parent" : "Maison",
+			"label" : "Prêt"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 1,
+			"category": "Commun",
+			"label": "CMB"
+		},
+		"cost": -873.06
+
+	}, {
+		"date": "2017-02-16T00:00:00.000Z",
+		"label": "",
+		"outcome": 11.70,
+		"income": 0,
+		"category": {
+			"categoryid" : 2,
+			"parent" : "Maison",
+			"label" : "Alimentaire"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 1,
+			"category": "Commun",
+			"label": "CMB"
+		},
+		"cost": -873.06
+
+	}, {
+		"date": "2017-03-02T00:00:00.000Z",
+		"label": "Cadeaux Sandra",
+		"outcome": 229.00,
+		"income": 0,
+		"category": {
+			"categoryid" : 3,
+			"parent" : "Dépenses Personnelles",
+			"label" : "Cadeaux"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 2,
+			"category": "Perso",
+			"label": "ING Direct"
+		},
+		"cost": -229
+
+	}, {
+		"date": "2017-03-02T00:00:00.000Z",
+		"label": "",
+		"outcome": 60.10,
+		"income": 0,
+		"category": {
+			"categoryid" : 4,
+			"parent" : "Voiture",
+			"label" : "Essence"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 2,
+			"category": "Perso",
+			"label": "ING Direct"
+		},
+		"cost": -60.10
+
+	}, {
+		"date": "2017-02-15T00:00:00.000Z",
+		"label": "",
+		"outcome": 19.99,
+		"income": 0,
+		"category": {
+			"categoryid" : 5,
+			"parent" : "Dépenses Personnelles",
+			"label" : "Téléphone"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 2,
+			"category": "Perso",
+			"label": "ING Direct"
+		},
+		"cost": -19.99
+
+	}, {
+		"date": "2017-02-14T00:00:00.000Z",
+		"label": "Rbt USA Gwenn",
+		"outcome": 0,
+		"income": 56.76,
+		"category": {
+			"categoryid" : 6,
+			"parent" : "Vacances",
+			"label" : "USA 2016"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 2,
+			"category": "Perso",
+			"label": "ING Direct"
+		},
+		"cost": 56.76
+
+	}, {
+		"date": "2017-06-14T00:00:00.000Z",
+		"label": "Restaurant",
+		"outcome": 10.90,
+		"income": 0,
+		"category": {
+			"categoryid" : 7,
+			"parent" : "Alimentaire",
+			"label" : "Restaurant"
+		},
+		"prevision": false,
+		"bankaccount": {
+			"bankaccountid" : 2,
+			"category": "Perso",
+			"label": "Espèces"
+		},
+		"cost": 56.76
+
+	}
+]

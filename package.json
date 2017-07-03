@@ -1,0 +1,28 @@
+{
+  "name": "transactions",
+  "version": "0.0.1",
+  "description": "Account manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha  -g .*integration.* --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "/media/julien/RAID/Dev/Projet/../Repository/Transactions.git/"
+  },
+  "author": "Julien Girard",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^4.1.0",
+    "mocha": "^3.2.0",
+    "should": "^11.2.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.24",
+    "monk": "^4.0.0"
+  }
+}
