@@ -5,6 +5,11 @@ var transactions = db.getInstance().get("transactions");
 
 function validTransactions(transaction) {
 
+	// convert income and outcome to cent (x 100)
+	transaction.income = transaction.income * 100;
+	transaction.outcome = transaction.outcome * 100;
+
+	// Compute cost property, used for total
 	transaction.cost = transaction.income - transaction.outcome;
 
 	if (transaction.category != undefined && Object.keys(transaction.category).length === 0 && transaction.category.constructor === Object) {
@@ -43,6 +48,10 @@ var getTransactions = function (id, done) {
 var getAllTransactions = function (done) {
 	transactions.find({})
 	.then(function(results){
+		results.forEach(function (currentElement) {
+			currentElement.income = currentElement.income / 100;
+			currentElement.outcome = currentElement.outcome / 100;
+		})
 		done (null, results);
 	}).catch(function (err) {
 		console.log("Error happened " + err);

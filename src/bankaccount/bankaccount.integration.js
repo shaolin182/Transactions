@@ -32,6 +32,17 @@ describe("Integration Tests for bankaccount modules", function () {
 	it("Retrieving all bank accounts", function (done) {
 		bankaccount.getAll(function (err, results) {
 			results.length.should.eql(3);
+			results[0].category.should.eql('Commun');
+			results[0].bankaccountid.should.eql(1);
+			results[0].label.should.eql('CMB');
+
+			results[1].category.should.eql('Perso');
+			results[1].bankaccountid.should.eql(2);
+			results[1].label.should.eql('ING Direct');
+
+			results[2].category.should.eql('Perso');
+			results[2].bankaccountid.should.eql(3);
+			results[2].label.should.eql('Espèces');
 			done();
 		});
 	});
@@ -39,6 +50,26 @@ describe("Integration Tests for bankaccount modules", function () {
 	it("Get Total by Bank Account Type", function (done) {
 		bankaccount.getBankAccountCategoryTotal(function (err, results) {
 			results.length.should.eql(2);
+			results[0]._id.should.eql('Perso');
+			results[0].total.should.eql(-24143);
+
+			results[1]._id.should.eql('Commun');
+			results[1].total.should.eql(-174612);
+			done();
+		});
+	});
+
+	it("Get Total by Bank Account", function (done) {
+		bankaccount.getBankAccountTotal(function (err, results) {
+			results.length.should.eql(3);
+			results[0]._id.should.eql({ category: 'Perso', label: 'Espèces' });
+			results[0].total.should.eql(1090);
+
+			results[1]._id.should.eql({ category: 'Perso', label: 'ING Direct' });
+			results[1].total.should.eql(-25233);
+
+			results[2]._id.should.eql({ category: 'Commun', label: 'CMB' });
+			results[2].total.should.eql(-174612);
 			done();
 		});
 	});

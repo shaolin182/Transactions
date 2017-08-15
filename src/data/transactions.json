@@ -15,7 +15,7 @@
 			"category": "Commun",
 			"label": "CMB"
 		},
-		"cost": -873.06
+		"cost": -87306
 
 	}, {
 		"date": "2017-02-16T00:00:00.000Z",
@@ -33,7 +33,7 @@
 			"category": "Commun",
 			"label": "CMB"
 		},
-		"cost": -873.06
+		"cost": -87306
 
 	}, {
 		"date": "2017-03-02T00:00:00.000Z",
@@ -51,7 +51,7 @@
 			"category": "Perso",
 			"label": "ING Direct"
 		},
-		"cost": -229
+		"cost": -22900
 
 	}, {
 		"date": "2017-03-02T00:00:00.000Z",
@@ -69,12 +69,12 @@
 			"category": "Perso",
 			"label": "ING Direct"
 		},
-		"cost": -60.10
+		"cost": -6010
 
 	}, {
 		"date": "2017-02-15T00:00:00.000Z",
 		"label": "",
-		"outcome": 19.99,
+		"outcome": 1999,
 		"income": 0,
 		"category": {
 			"categoryid" : 5,
@@ -87,7 +87,7 @@
 			"category": "Perso",
 			"label": "ING Direct"
 		},
-		"cost": -19.99
+		"cost": -1999
 
 	}, {
 		"date": "2017-02-14T00:00:00.000Z",
@@ -105,7 +105,7 @@
 			"category": "Perso",
 			"label": "ING Direct"
 		},
-		"cost": 56.76
+		"cost": 5676
 
 	}, {
 		"date": "2017-06-14T00:00:00.000Z",
@@ -119,11 +119,11 @@
 		},
 		"prevision": false,
 		"bankaccount": {
-			"bankaccountid" : 2,
+			"bankaccountid" : 3,
 			"category": "Perso",
 			"label": "Espèces"
 		},
-		"cost": 56.76
+		"cost": 1090
 
 	}
 ]

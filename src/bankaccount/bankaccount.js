@@ -16,6 +16,9 @@ var getAllBankAccount = function (done) {
 var getBankAccountCategoryTotal = function(done) {
 	transactions.aggregate([{$group: {_id: "$bankaccount.category", total: {$sum : "$cost"}}}])
 	.then(function(results) {
+		results.forEach(function(currentElement) {
+			currentElement.total = currentElement.total / 100;
+		})
 		done (null, results);
 	}).catch(function (err) {
 		console.log("Error happened " + err);
@@ -26,6 +29,9 @@ var getBankAccountCategoryTotal = function(done) {
 var getBankAccountTotal = function(done) {
 	transactions.aggregate([{$group: {_id: {"category":"$bankaccount.category", "label":"$bankaccount.label"}, total: {$sum : "$cost"}}}])
 	.then(function(results) {
+		results.forEach(function(currentElement) {
+			currentElement.total = currentElement.total / 100;
+		})
 		done (null, results);
 	}).catch(function (err) {
 		console.log("Error happened " + err);
