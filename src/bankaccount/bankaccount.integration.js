@@ -51,10 +51,10 @@ describe("Integration Tests for bankaccount modules", function () {
 		bankaccount.getBankAccountCategoryTotal(function (err, results) {
 			results.length.should.eql(2);
 			results[0]._id.should.eql('Perso');
-			results[0].total.should.eql(-24143);
+			results[0].total.should.eql(-241.43);
 
 			results[1]._id.should.eql('Commun');
-			results[1].total.should.eql(-174612);
+			results[1].total.should.eql(-1746.12);
 			done();
 		});
 	});
@@ -63,13 +63,13 @@ describe("Integration Tests for bankaccount modules", function () {
 		bankaccount.getBankAccountTotal(function (err, results) {
 			results.length.should.eql(3);
 			results[0]._id.should.eql({ category: 'Perso', label: 'Espèces' });
-			results[0].total.should.eql(1090);
+			results[0].total.should.eql(10.90);
 
 			results[1]._id.should.eql({ category: 'Perso', label: 'ING Direct' });
-			results[1].total.should.eql(-25233);
+			results[1].total.should.eql(-252.33);
 
 			results[2]._id.should.eql({ category: 'Commun', label: 'CMB' });
-			results[2].total.should.eql(-174612);
+			results[2].total.should.eql(-1746.12);
 			done();
 		});
 	});
