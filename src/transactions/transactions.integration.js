@@ -29,6 +29,7 @@ describe("Integration Tests for transactions modules", function () {
 		})
 	})
 
+	
 	it("Retrieving all results", function (done) {
 		transactions.getAll(function (err, results) {
 			results.length.should.eql(7);

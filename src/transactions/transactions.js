@@ -9,6 +9,13 @@ function validTransactions(transaction) {
 	transaction.income = transaction.income * 100;
 	transaction.outcome = transaction.outcome * 100;
 
+	if (transaction.subtransaction != undefined){
+		transaction.subtransaction.forEach(function (currentElement) {
+			currentElement.income = currentElement.income * 100;
+			currentElement.outcome = currentElement.outcome * 100;
+		});
+	}
+
 	// Compute cost property, used for total
 	transaction.cost = transaction.income - transaction.outcome;
 
@@ -51,6 +58,14 @@ var getAllTransactions = function (done) {
 		results.forEach(function (currentElement) {
 			currentElement.income = currentElement.income / 100;
 			currentElement.outcome = currentElement.outcome / 100;
+
+			if (currentElement.subtransaction != undefined){
+				currentElement.subtransaction.forEach(function (subtransaction){
+					subtransaction.income = subtransaction.income / 100;
+					subtransaction.outcome = subtransaction.outcome / 100;
+				});
+			}
+			
 		})
 		done (null, results);
 	}).catch(function (err) {

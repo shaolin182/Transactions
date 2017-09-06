@@ -14,7 +14,9 @@ var getAllBankAccount = function (done) {
 }
 
 var getBankAccountCategoryTotal = function(done) {
-	transactions.aggregate([{$group: {_id: "$bankaccount.category", total: {$sum : "$cost"}}}])
+	transactions.aggregate([
+		{"$match": {"bankaccount.category": { "$exists": true, "$ne": null }}},
+		{$group: {_id: "$bankaccount.category", total: {$sum : "$cost"}}}])
 	.then(function(results) {
 		results.forEach(function(currentElement) {
 			currentElement.total = currentElement.total / 100;
