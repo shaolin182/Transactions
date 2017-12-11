@@ -1,35 +1,50 @@
 var db = require("../database/mongodb");
 var data = require("../data/transactions.json");
+var uniqueData = require("../data/aTransaction.json");
 var should = require("should");
 var transactions;
-var importResults;
 
 //console.log = function() {};
 
 describe("Integration Tests for transactions modules", function () {
 
+	/**
+	* Before running any tests, connect to the test database
+	*/
 	before(function (done) {
 		db.connect(db.MODE_TEST, function (err, results) {
 			if (err) {
 				console.log('A problem occured while connecting to database  ==> exit');
 				done();
 			}
+
+			// Init module transaction
 			transactions = require("./transactions");
-			console.log("Database connected");
 			done();
 		});
 	})
 
+	/*
+	* Before each tests, clean the test database, then reimport data file and convert date property
+	*/
 	beforeEach(function (done) {
 		db.clean ("transactions", function (err, results) {
+
+			// convert some fields of  data file to respect property type 
+			data.forEach(function (currentElement) {
+				currentElement.date = new Date (currentElement.date);
+			});
+
+			// import data
 			db.import("transactions", data, function (err, results) {
-				importResults = results;
 				done();
 			});
 		})
 	})
 
-	
+	/*
+	* Test that getAll method return all results from database
+	*/
 	it("Retrieving all results", function (done) {
 		transactions.getAll(function (err, results) {
 			results.length.should.eql(7);
@@ -37,35 +52,27 @@ describe("Integration Tests for transactions modules", function () {
 		});
 	});
 
+	/*
+	* Test that get method return correct record given an id.
+	*/
 	it("Retrieving a result given its id", function (done) {
-		var currentId = importResults[3]._id;
+		var currentId = data[3]._id;
 		transactions.get(currentId, function (err, results) {
 			results._id.should.eql(currentId);
-			results.date.should.eql(importResults[3].date);
-			results.bankaccount.should.eql(importResults[3].bankaccount);
-			results.category.should.eql(importResults[3].category);
-			results.income.should.eql(importResults[3].income);
-			results.outcome.should.eql(importResults[3].outcome);
+			results.date.should.eql(data[3].date);
+			results.bankaccount.should.eql(data[3].bankaccount);
+			results.category.should.eql(data[3].category);
+			results.income.should.eql(data[3].income);
+			results.outcome.should.eql(data[3].outcome);
 			done();
 		});
 	});
 
+	/*
+	* Test that add method, create a new record in database with correct data.
+	*/ 
 	it("Adding a new element", function (done) {
-		var aTransaction = {
-			"date": "2017-03-17T00:00:00.000Z",
-			"label": "Test",
-			"outcome": 125.06,
-			"income": 0,
-			"category": {
-				"parent" : "Perso",
-				"label" : "Photo"
-			},
-			"prevision": false,
-			"bankaccount": {
-				"type": "Perso",
-				"label": "ING Direct"
-			}
-		};
+		var aTransaction = uniqueData;
 
 		transactions.add(aTransaction, function (err, results){
 			transactions.getAll(function (err, results) {
@@ -81,26 +88,4 @@ describe("Integration Tests for transactions modules", function () {
 		});
 	});
 
-	it("Removing an element", function (done) {
-		var currentId = importResults[3]._id;
-		transactions.remove(currentId, function (err, results) {
-			transactions.getAll(function (err, results) {
-				results.length.should.eql(6);
-				done();
-			});
-		});
-	});
-
-	it("Updating an element", function (done) {
-		importResults[3].date = "2017-03-17T00:00:00.000Z";
-		var currentId = importResults[3]._id;
-		
-		transactions.update(importResults[3], function (err, results){
-			transactions.get(currentId, function (err, results) {
-				results.date.should.eql("2017-03-17T00:00:00.000Z");
-				done();
-			});
-		});
-
-	});
 });

@@ -14,8 +14,13 @@ describe("Integration Tests for bankaccount modules", function () {
 				console.log('A problem occured while connecting to database  ==> exit');
 				done();
 			}
+
+			// convert some fields of  data file to respect property type 
+			data.forEach(function (currentElement) {
+				currentElement.date = new Date (currentElement.date);
+			});
+			
 			bankaccount = require("./bankaccount");
-			console.log("Database connected");
 			done();
 		});
 	});

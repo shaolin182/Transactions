@@ -1,0 +1,16 @@
+{
+	"income":0,
+	"outcome":57.41,
+	"date":"2017-12-08T17:05:01.000Z",
+	"multi":false,
+	"category":{
+		"id":22,
+		"category":"Transport",
+		"label":"Essence"
+	},
+	"bankaccount":{
+		"id":26,
+		"category":"Perso",
+		"label":"ING Direct"
+	}
+}

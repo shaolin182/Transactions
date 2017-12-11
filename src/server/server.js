@@ -39,7 +39,6 @@ function handleHeader(req, res, next) {
 function handleUnknownPath (req, res, next){
 	console.log('Unknown path : ' + req.path);
 
-
 	res.send("Page Not Found");
 	next();
 };

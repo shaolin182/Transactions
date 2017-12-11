@@ -8,5 +8,5 @@ db.connect(db.MODE_PROD, function (err, results) {
 		return;
 	}
 	
-	server.start([require("./transactions/router"), require("./categories/categories.router"), require("./bankaccount/bankaccount-router")]);
+	server.start([require("./transactions/transactions-router"), require("./categories/categories-router"), require("./bankaccount/bankaccount-router"), require("./stats/stats-router")]);
 });

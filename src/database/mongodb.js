@@ -45,7 +45,7 @@ var connect = function(mode, done) {
 	db = monk(uri);
 
 	db.then(function () {
-		console.log ("Connected to database : " + uri);
+		//console.log ("Connected to database : " + uri);
 		done();
 	}).catch(function (err) {
 		console.log ("Error occured while connecting to database : " + uri + " " + err);
@@ -76,7 +76,7 @@ var cleanDatabase = function (collection, done) {
 		if (err) {
 			console.log ("error occured while dropping collection : " + collection + " " + err);
 		} else {
-			console.log("Collection " + collection + " dropped");	
+			//console.log("Collection " + collection + " dropped");	
 		}
 		done(err, results);
 	});
@@ -99,7 +99,7 @@ var cleanDatabase = function (collection, done) {
  		if (err) {
  			console.log ("error occured while inserting data into collection : " + collection + " " + err) ;
  		} else {
- 			console.log("data inserted into collection : " + collection + " " + results.length);	
+ 			//console.log("data inserted into collection : " + collection + " " + results.length);	
  		}
 
  		done(err, results);
