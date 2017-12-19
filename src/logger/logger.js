@@ -4,16 +4,18 @@ var logger = new (winston.Logger)({
     transports: [
         new winston.transports.File({
             level: 'info',
-            filename: '../logs/all-logs.log',
+            filename: './logs/all-logs.log',
             handleExceptions: true,
             json: true,
-            colorize: false
+            colorize: false,
+            timestamp: true
         }),
         new winston.transports.Console({
             level: 'debug',
             handleExceptions: true,
             json: false,
-            colorize: true
+            colorize: true,
+            timestamp: true
         })
     ],
     exitOnError: false

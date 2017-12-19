@@ -5,12 +5,30 @@
 var express = require("express");
 
 /*
+* Logger
+*/
+var logger = require("../logger/logger");
+
+/*
 * Middleware use for logging every request received on node js server
 */
-function logRequest (req, res, next) {
-	console.log('Received Request on ' + req.path);
+function logIncomingRequest (req, res, next) {
+	logger.log('debug', 'Received Request on ' + req.path);
 	next();
 };
+
+/*
+* Middleware use for logging response time of http request
+* It adds a listener on finish event for capturing response time
+*/
+function logResponseTime(req, res, next) {
+	var startTime = Date.now();
+    res.on('finish', function() {
+        var duration = Date.now() - startTime;
+        logger.log('info', 'Request on ' + req.path, {"duration" : duration});
+    });
+    next();
+}
 
 /**
 * Middleware use for allowing request from client side
@@ -37,7 +55,7 @@ function handleHeader(req, res, next) {
 * Middleware use for handling behavior when receiving a request with a path not handled by application
 */
 function handleUnknownPath (req, res, next){
-	console.log('Unknown path : ' + req.path);
+	logger.log('error', 'Unknown path : ' + req.path);
 
 	res.send("Page Not Found");
 	next();
@@ -55,8 +73,9 @@ function start(router){
 	var app = express();
 
 	// use middleware for logging all request
-	app.use(logRequest);
+	app.use(logIncomingRequest);
 	app.use(handleHeader);
+	app.use(logResponseTime);
 
 	// Handle specific router module
 	if (!Array.isArray(router)) {
@@ -70,14 +89,14 @@ function start(router){
 	// use middleware for handling unknown path
 	app.use(handleUnknownPath);
 
-	// use middleware for handling excceptions
+	// use middleware for handling exceptions
 	app.use(function (err, req, res, next) {
 		res.send("Error 500 global " + err);
 	})
 
 	// start server
 	app.listen(8080, function () {
-		console.log ("Server started");
+		logger.log ('info', 'Server started');
 	});
 
 }

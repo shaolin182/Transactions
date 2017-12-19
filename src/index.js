@@ -1,10 +1,11 @@
 var server = require("./server/server");
 var db = require("./database/mongodb");
+var logger = require("./logger/logger");
 
 db.connect(db.MODE_PROD, function (err, results) {
 
 	if (err) {
-		console.log('A problem occured while connecting to database  ==> exit');
+		logger.log('error','A problem occured while connecting to database  ==> exit');
 		return;
 	}
 	
