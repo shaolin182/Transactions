@@ -27,7 +27,7 @@ gulp.task('watch', function () {
 gulp.task('test', function() {
 	return gulp.src(['src/**/*integration*.js'], { read: false })
 	.pipe(mocha({
-		reporter: 'spec',
+		reporter: 'xunit',
 		globals: {
 			should: require('should')
 		}
