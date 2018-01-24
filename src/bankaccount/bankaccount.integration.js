@@ -3,36 +3,56 @@ var data = require("../data/transactions.json");
 var should = require("should");
 var bankaccount;
 var importResults;
+var logger = require("../logger/logger")
+
 
 //console.log = function() {};
 
 describe("Integration Tests for bankaccount modules", function () {
 
+	/**
+	* Before running any tests, connect to the test database and load functionality module
+	*/
 	before(function (done) {
-		db.connect(db.MODE_TEST, function (err, results) {
-			if (err) {
-				console.log('A problem occured while connecting to database  ==> exit');
-				done();
-			}
-
-			// convert some fields of  data file to respect property type 
-			data.forEach(function (currentElement) {
-				currentElement.date = new Date (currentElement.date);
-			});
-			
+		db.connect(db.MODE_TEST)
+		.then(function (results) {
 			bankaccount = require("./bankaccount");
 			done();
-		});
-	});
-
-	beforeEach(function (done) {
-		db.clean ("transactions", function (err, results) {
-			db.import("transactions", data, function (err, results) {
-				importResults = results;
-				done();
-			});
 		})
-	});
+		.catch(function (err) {
+			logger.log('error', 'A problem occured while initializong test case ' + err);
+			done();
+		});
+	})
+
+	/*
+	* Transform test data in order to insert specific type in mongo database
+	*/
+	beforeEach(function(done) {
+		data.forEach(function (currentElement) {
+			// Convert string date to Date
+			currentElement.date = new Date (currentElement.date);
+		});
+		done();
+	})
+
+	/**
+	* Clean transaction collection and then reimport it in order to use clean data before loading tests
+	*/
+	beforeEach(function (done) {
+		db.clean("transactions")
+		.then(function () {
+			return db.import("transactions", data)
+		})
+		.then(function (results) {
+			importResults = results;
+			done();
+		})
+		.catch(function (err) {
+			logger.log("error", "Error while setup database for tests " + err);
+			done();
+		})	
+	})
 
 	it("Retrieving all bank accounts", function (done) {
 		bankaccount.getAll(function (err, results) {
@@ -78,6 +98,4 @@ describe("Integration Tests for bankaccount modules", function () {
 			done();
 		});
 	});
-
-
 });

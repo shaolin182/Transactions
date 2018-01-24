@@ -1,53 +1,81 @@
+"use strict";
+
 var db = require("../database/mongodb");
 var data = require("../data/transactions.json");
 var uniqueData = require("../data/aTransaction.json");
 var should = require("should");
 var transactions;
-
-//console.log = function() {};
+var server = require("../server/server");
+var request = require('supertest');
+var logger = require("../logger/logger")
+var importResults;
 
 describe("Integration Tests for transactions modules", function () {
 
 	/**
-	* Before running any tests, connect to the test database
+	* Before running any tests, connect to the test database and load functionality module
 	*/
 	before(function (done) {
-		db.connect(db.MODE_TEST, function (err, results) {
-			if (err) {
-				console.log('A problem occured while connecting to database  ==> exit');
-				done();
-			}
-
-			// Init module transaction
+		db.connect(db.MODE_TEST)
+		.then(function (results) {
 			transactions = require("./transactions");
+			done();
+		})
+		.catch(function (err) {
+			logger.log('error', 'A problem occured while initializong test case ' + err);
 			done();
 		});
 	})
 
 	/*
-	* Before each tests, clean the test database, then reimport data file and convert date property
+	* Transform test data in order to insert specific type in mongo database
+	*/
+	beforeEach(function(done) {
+		data.forEach(function (currentElement) {
+			// Convert string date to Date
+			currentElement.date = new Date (currentElement.date);
+		});
+		done();
+	})
+
+	/**
+	* Clean transaction collection and then reimport it in order to use clean data before loading tests
 	*/
 	beforeEach(function (done) {
-		db.clean ("transactions", function (err, results) {
-
-			// convert some fields of  data file to respect property type 
-			data.forEach(function (currentElement) {
-				currentElement.date = new Date (currentElement.date);
-			});
-
-			// import data
-			db.import("transactions", data, function (err, results) {
-				done();
+		db.clean ("transactions")
+		.then(function() {
+			return db.import("transactions", data);	
+		})
+		.then(function (results) {
+			importResults = results;
+		})
+		.then (function () {
+			server.start([require("./transactions-router")], function () {
+				done();	
 			});
 		})
+		.catch(function (err) {
+			logger.log("error", "Error while setup database for tests " + err);
+			done();
+		})
 	})
+
+	/**
+	* Close server
+	*/
+	afterEach(function () {
+		server.getInstance().close();
+	});
 
 	/*
 	* Test that getAll method return all results from database
 	*/
 	it("Retrieving all results", function (done) {
-		transactions.getAll(function (err, results) {
-			results.length.should.eql(7);
+		request(server.getInstance())
+		.get('/transactions')
+		.expect(200)
+		.end(function (err, res) {
+			res.body.length.should.eql(7);
 			done();
 		});
 	});

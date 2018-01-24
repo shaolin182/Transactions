@@ -4,6 +4,8 @@
 
 var express = require("express");
 
+var server;
+
 /*
 * Logger
 */
@@ -23,11 +25,11 @@ function logIncomingRequest (req, res, next) {
 */
 function logResponseTime(req, res, next) {
 	var startTime = Date.now();
-    res.on('finish', function() {
-        var duration = Date.now() - startTime;
-        logger.log('info', 'Request on ' + req.path, {"duration" : duration});
-    });
-    next();
+	res.on('finish', function() {
+		var duration = Date.now() - startTime;
+		logger.log('info', 'Request on ' + req.path, {"duration" : duration});
+	});
+	next();
 }
 
 /**
@@ -68,7 +70,7 @@ function handleUnknownPath (req, res, next){
 * param :
 * router : contains an array of router module specific to an application. this param can be a single module router or an array of module router
 */
-function start(router){
+function start(router, done){
 
 	var app = express();
 
@@ -95,10 +97,16 @@ function start(router){
 	})
 
 	// start server
-	app.listen(8080, function () {
+	server = app.listen(8080, function () {
 		logger.log ('info', 'Server started');
+		done();
 	});
 
 }
 
+function getInstance() {
+	return server;
+}
+
 exports.start = start;
+exports.getInstance = getInstance;

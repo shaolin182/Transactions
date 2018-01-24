@@ -28,29 +28,34 @@ exports.MODE_PROD = 'PROD';
 var db;
 
 /*
+* Logger
+*/
+var logger = require("../logger/logger")
+
+
+/*
 * Connect to a database
 * 
 * param
 * mode : indicates if we want to connect in PROD mode or TEST mode
-* done : callback function
 */
-var connect = function(mode, done) {
+var connect = function(mode) {
 
-	if (db) return done();
+	return new Promise(function (resolve, reject) {
+		var uri = mode === exports.MODE_TEST ? TEST_URI : PROD_URI
 
-	// Define which environment to connect to
-	var uri = mode === exports.MODE_TEST ? TEST_URI : PROD_URI
+		if (db) resolve();
 
-	// Connect to database
-	db = monk(uri);
+		db = monk(uri);
 
-	db.then(function () {
-		//console.log ("Connected to database : " + uri);
-		done();
-	}).catch(function (err) {
-		console.log ("Error occured while connecting to database : " + uri + " " + err);
-		done(err);
-	})
+		db.then(function () {
+			logger.log("info", "Connected to database");
+			resolve();
+		}).catch(function (err) {
+			logger.log("error", "Error occured while connecting to database : " + err);
+			reject(err);
+		})			
+	});
 }
 
 /*
@@ -66,21 +71,22 @@ var getInstance = function (){
 *
 * param
 * collection : name of the collection we want to clean
-* done : callback function
 */
-var cleanDatabase = function (collection, done) {
+var cleanDatabase = function (collection) {
+	return new Promise(function (resolve, reject) {
+		if (!db) reject();
 
-	if (!db) return done();
-
-	db.get(collection).drop(function (err, results) {
-		if (err) {
-			console.log ("error occured while dropping collection : " + collection + " " + err);
-		} else {
-			//console.log("Collection " + collection + " dropped");	
-		}
-		done(err, results);
+		db.get(collection).drop()
+		.then (function (results) {
+			logger.log("info", "Collection dropped");
+			resolve(results);
+		})
+		.catch (function (err) {
+			logger.log("error", "occured while dropping collection : " + err);
+			reject(err);
+		})
 	});
-}
+};
 
 /*
  * Import a collection of data into a specific collection
@@ -88,23 +94,21 @@ var cleanDatabase = function (collection, done) {
  * param
  * collection : name of the collection we want to insert data in
  * data : a set of data to insert
- * done : callback function
  */
- var importData = function (collection, data, done) {
+ var importData = function (collection, data) {
+ 	return new Promise (function (resolve, reject) {
+ 		if (!db) reject();
 
- 	if (!db) return done();
-
- 	db.get(collection).insert(data, function (err, results) {
-
- 		if (err) {
- 			console.log ("error occured while inserting data into collection : " + collection + " " + err) ;
- 		} else {
- 			//console.log("data inserted into collection : " + collection + " " + results.length);	
- 		}
-
- 		done(err, results);
+ 		db.get(collection).insert(data)
+ 		.then(function (results) {
+ 			logger.log("info", "Collection imported");
+ 			resolve(results);
+ 		})
+ 		.catch (function (err) {
+ 			logger.log ("error", "Error occured while inserting data into collection : " + err);
+ 			reject(err);
+ 		})
  	});
-
  }
 
  exports.getInstance = getInstance;
