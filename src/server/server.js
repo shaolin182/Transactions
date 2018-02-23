@@ -93,7 +93,7 @@ function start(router, done){
 
 	// use middleware for handling exceptions
 	app.use(function (err, req, res, next) {
-		res.send("Error 500 global " + err);
+		res.status(500).send({"error" : "Error 500 : " + err});
 	})
 
 	// start server
