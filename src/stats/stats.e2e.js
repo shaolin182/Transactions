@@ -6,6 +6,8 @@ var should = require("should");
 var importResults;
 var stats;
 var logger = require("../logger/logger")
+var server = require("../server/server");
+var request = require('supertest');
 
 describe("Integration Tests for stats modules", function () {
 
@@ -40,28 +42,53 @@ describe("Integration Tests for stats modules", function () {
 	*/
 	beforeEach(function (done) {
 		db.clean ("transactions")
-		.then(function () {
-			return db.import("transactions", data)
+		.then(function() {
+			return db.import("transactions", data);	
 		})
 		.then(function (results) {
 			importResults = results;
-			done();
+		})
+		.then (function () {
+			server.start([require("./stats-router")], function () {
+				done();	
+			});
 		})
 		.catch(function (err) {
 			logger.log("error", "Error while setup database for tests " + err);
 			done();
-		})	
+		})
 	})
 
-	it("Retrieving Stats / Total Cost By month", function (done) {
-		stats.getTotalCostByMonth(function (err, results) {
-			results.length.should.eql(3);
-			results[0].costByMonth.should.eql(-170935);
-			results[1].costByMonth.should.eql(-28910);
-			results[2].costByMonth.should.eql(1090);
-			done();
-		});
-
+	/**
+	* Close server
+	*/
+	afterEach(function () {
+		server.getInstance().close();
 	});
 
+
+	/*
+	* Integration test linked to HTTP request GET /stats/totalCostByMonth
+	*/
+	describe ("GET /stats/totalCostByMonth", function () {
+
+		/**
+		* Ensure that HTTP request return correct balance by month
+		*/
+		it("Retrieving Stats / Total Cost By month", function (done) {
+
+			request(server.getInstance())
+			.get('/stats/totalCostByMonth')
+			.expect(200)
+			.end(function (err, res) {
+				if (err) return done(err);
+
+				res.body.length.should.eql(3);
+				res.body[0].costByMonth.should.eql(-170935);
+				res.body[1].costByMonth.should.eql(-28910);
+				res.body[2].costByMonth.should.eql(1090);
+				done();
+			});
+		});
+	});
 })

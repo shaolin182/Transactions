@@ -36,10 +36,10 @@ router.get("/transactions", function (req, res, next) {
 	});
 });
 
-// Handle HTTP request POST /transactions/:id for updating a transaction
-router.post("/transactions/:id", function (req, res, next) {
+// Handle HTTP request PUT /transactions/:id for updating a transaction
+router.put("/transactions/:id", function (req, res, next) {
 	validator.validateAndTransform(req.body);
-	transactions.update(req.body, function (err, results) {
+	transactions.update(req.params.id, req.body, function (err, results) {
 		handleResult(err, res, results);
 	});
 })

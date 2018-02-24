@@ -25,7 +25,7 @@ gulp.task('watch', function () {
 })
 
 gulp.task('test', function() {
-	return gulp.src(['src/**/*integration*.js'], { read: false })
+	return gulp.src(['src/**/*e2e*.js'], { read: false })
 	.pipe(mocha({
 		reporter: 'xunit',
 		globals: {

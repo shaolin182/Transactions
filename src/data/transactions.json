@@ -23,9 +23,9 @@
 		"outcome": 11.70,
 		"income": 0,
 		"category": {
-			"categoryid" : 2,
+			"categoryid" : 1,
 			"parent" : "Maison",
-			"label" : "Alimentaire"
+			"label" : "Prêt"
 		},
 		"prevision": false,
 		"bankaccount": {
