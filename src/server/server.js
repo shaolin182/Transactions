@@ -1,3 +1,6 @@
+"use strict";
+
+
 // This module is used to start a new web server
 // Web server is built thanks to Express framework.
 // It requires a router module as a parameter for handling routing path
@@ -9,7 +12,7 @@ var server;
 /*
 * Logger
 */
-var logger = require("../logger/logger");
+var logger  = require("../logger/logger");
 
 /*
 * Middleware use for logging every request received on node js server
@@ -59,9 +62,19 @@ function handleHeader(req, res, next) {
 function handleUnknownPath (req, res, next){
 	logger.log('error', 'Unknown path : ' + req.path);
 
-	res.send("Page Not Found");
-	next();
+	res.status(500).send({"error" : "Page not Found"});
 };
+
+/*
+* Init server module
+*
+* @param : 
+* loggerFwk : logger framework we are currently using
+* routerModule : list of router module in application
+*/
+function init(loggerFwk, routerModule) {
+	logger = loggerFwk;
+}
 
 /*
 * Start web server and load basic middleware for handling request
@@ -75,9 +88,9 @@ function start(router, done){
 	var app = express();
 
 	// use middleware for logging all request
-	app.use(logIncomingRequest);
-	app.use(handleHeader);
-	app.use(logResponseTime);
+	app.use(exports.logIncomingRequest);
+	app.use(exports.handleHeader);
+	app.use(exports.logResponseTime);
 
 	// Handle specific router module
 	if (!Array.isArray(router)) {
@@ -89,7 +102,7 @@ function start(router, done){
 	})
 
 	// use middleware for handling unknown path
-	app.use(handleUnknownPath);
+	app.use(exports.handleUnknownPath);
 
 	// use middleware for handling exceptions
 	app.use(function (err, req, res, next) {
@@ -110,3 +123,8 @@ function getInstance() {
 
 exports.start = start;
 exports.getInstance = getInstance;
+exports.init = init;
+exports.logIncomingRequest = logIncomingRequest;
+exports.handleUnknownPath = handleUnknownPath;
+exports.handleHeader = handleHeader;
+exports.logResponseTime = logResponseTime;
