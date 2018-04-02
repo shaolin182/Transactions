@@ -4,7 +4,8 @@
   "description": "Account manager",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha  -g .*integration.* --reporter spec"
+    "test": "./node_modules/.bin/mocha  -g .*integration.* --reporter spec",
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
