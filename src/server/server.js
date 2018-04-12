@@ -1,6 +1,5 @@
 "use strict";
 
-
 // This module is used to start a new web server
 // Web server is built thanks to Express framework.
 // It requires a router module as a parameter for handling routing path
@@ -12,7 +11,7 @@ var server;
 /*
 * Logger
 */
-var logger  = require("../logger/logger");
+var logger = require("../logger/logger")();
 
 /*
 * Middleware use for logging every request received on node js server
@@ -72,8 +71,8 @@ function handleUnknownPath (req, res, next){
 * loggerFwk : logger framework we are currently using
 * routerModule : list of router module in application
 */
-function init(loggerFwk, routerModule) {
-	logger = loggerFwk;
+function init(loggerImpl, routerModule) {
+	logger = loggerImpl;
 }
 
 /*

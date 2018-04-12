@@ -1,6 +1,10 @@
+// Load modules
 var server = require("./server/server");
 var db = require("./database/mongodb");
-var logger = require("./logger/logger");
+var LoggerFacade = require("./logger/loggerFacade");
+
+// Instanciate objects
+var logger = new LoggerFacade();
 
 db.connect(db.MODE_PROD)
 .then(function() {

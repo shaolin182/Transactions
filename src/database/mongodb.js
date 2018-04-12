@@ -30,8 +30,7 @@ var db;
 /*
 * Logger
 */
-var logger = require("../logger/logger")
-
+var logger = require("../logger/logger")();
 
 /*
 * Connect to a database

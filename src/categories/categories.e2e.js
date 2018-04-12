@@ -5,7 +5,7 @@ var data = require("../data/transactions.json");
 var should = require("should");
 var importResults;
 var categories;
-var logger = require("../logger/logger")
+var logger = require("../logger/logger")();
 var server = require("../server/server");
 var request = require('supertest');
 

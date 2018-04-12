@@ -7,7 +7,7 @@ var should = require("should");
 var transactions;
 var server = require("../server/server");
 var request = require('supertest');
-var logger = require("../logger/logger")
+var logger = require("../logger/logger")();
 var importResults;
 
 describe("Integration Tests for transactions modules", function () {
