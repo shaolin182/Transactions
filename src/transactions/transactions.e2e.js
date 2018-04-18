@@ -171,6 +171,31 @@ describe("Integration Tests for transactions modules", function () {
 				done();
 			});
 		});
+
+		/*
+		* Test that add method, create a new record in database with correct data.
+		*/ 
+		it("Adding a new element and ensure that decimal number are correctly saved", function (done) {
+
+			var aTransaction = uniqueData;
+			aTransaction.outcome = 19.99;
+
+			request(server.getInstance())
+			.post('/transactions')
+			.send(aTransaction)
+			.expect(200)
+			.end (function (err, res) {
+				if (err) return done(err);
+
+				res.body.date.should.eql(aTransaction.date);
+				res.body.bankaccount.label.should.eql(aTransaction.bankaccount.label);
+				res.body.category.label.should.eql(aTransaction.category.label);
+				res.body.income.should.eql(aTransaction.income * 100);
+				res.body.outcome.should.eql(1999);
+				res.body.should.have.property("_id");
+				done();
+			});
+		});
 	})
 
 	/**

@@ -44,11 +44,15 @@ var transform = function (aTransaction) {
 }
 
 /*
-* Convert 'income' out 'outcome' properties into cent for avoiding decimal issue
+* As javascript use binary floating point, there are some issue when working with decimal number (example 19.99 * 100 = 1998.99999),
+* we use the method "ToFixed" to round number.
+* We also delete '.00' value added by the toFixed method on integer and parse them to number
+*
+* Convert 'income' out 'outcome' properties into cent for avoiding decimal issue ib further process
 */
 var convertToCent = function (currentElement) {
-	currentElement.income = currentElement.income * 100;
-	currentElement.outcome = currentElement.outcome * 100;
+	currentElement.income = parseFloat((currentElement.income * 100).toFixed(2).replace(/[.,]00/, ""));
+	currentElement.outcome = parseFloat((currentElement.outcome * 100).toFixed(2).replace(/[.,]00/, ""));
 }
 
 /**
@@ -60,3 +64,4 @@ var computeCost = function(aTransaction) {
 }
 
 exports.validateAndTransform = validateAndTransform;
+exports.convertToCent = convertToCent;
