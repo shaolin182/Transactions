@@ -7,7 +7,8 @@ WORKDIR /usr/src/app
 # Create logs directory
 RUN mkdir ./logs
 
-# Create a mount point for logs
+# Create mount points for source code and modules
+VOLUME /usr/src/app/src
 VOLUME /usr/src/app/logs
 
 # Copy package.json file here in order to install dependencies
