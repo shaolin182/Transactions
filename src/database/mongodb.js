@@ -5,12 +5,12 @@ const monk = require("monk");
 /*
 * Database PROD URI
 */
-const PROD_URI = "mongo:27017/transactions";
+const PROD_URI = "mongo-db:27017/transactions";
 
 /*
 * Database TEST URI
 */
-const TEST_URI = "mongo:27017/transactionsTests";
+const TEST_URI = "mongo-db:27017/transactionsTests";
 
 /*
 * Indicate to load TEST database
