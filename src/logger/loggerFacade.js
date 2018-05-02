@@ -31,7 +31,7 @@ LoggerFacade.prototype.log = function(message, logLevel) {
 * Return current logging framework
 */
 LoggerFacade.prototype.getLoggerImpl = function () {
-	return logger;
+	return LoggerFacade.prototype.logger;
 }
 
 module.exports = LoggerFacade;
