@@ -5,12 +5,12 @@ const monk = require("monk");
 /*
 * Database PROD URI
 */
-const PROD_URI = "mongo:27017/transactions";
+const PROD_URI = process.env.DB_URI;
 
 /*
 * Database TEST URI
 */
-const TEST_URI = "mongo:27017/transactionsTests";
+const TEST_URI = process.env.DB_TEST_URI;
 
 /*
 * Indicate to load TEST database
@@ -39,7 +39,6 @@ var logger = require("../logger/logger")();
 * mode : indicates if we want to connect in PROD mode or TEST mode
 */
 var connect = function(mode) {
-
 	return new Promise(function (resolve, reject) {
 		var uri = mode === exports.MODE_TEST ? TEST_URI : PROD_URI
 

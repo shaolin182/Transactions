@@ -40,7 +40,7 @@ function logResponseTime(req, res, next) {
 function handleHeader(req, res, next) {
 
 	// Website you wish to allow to connect
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
+	res.setHeader('Access-Control-Allow-Origin', process.env.ACCESS_CONTROL_ALLOW_ORIGIN);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -109,7 +109,7 @@ function start(router, done){
 	})
 
 	// start server
-	server = app.listen(8080, function () {
+	server = app.listen(process.env.SERVER_PORT, function () {
 		logger.log ('info', 'Server started');
 		done();
 	});

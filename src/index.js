@@ -1,4 +1,5 @@
 // Load modules
+require('dotenv').config();
 var server = require("./server/server");
 var db = require("./database/mongodb");
 var LoggerFacade = require("./logger/loggerFacade");
