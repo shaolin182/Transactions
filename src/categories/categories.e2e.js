@@ -9,7 +9,7 @@ var logger = require("../logger/logger")();
 var server = require("../server/server");
 var request = require('supertest');
 
-describe("Integration Tests for stats modules", function () {
+describe("Integration Tests for categories modules", function () {
 
 	/**
 	* Before running any tests, connect to the test database and load functionality module
