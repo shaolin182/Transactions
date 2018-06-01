@@ -5,7 +5,8 @@ var data = require("../data/transactions.json");
 var uniqueData = require("../data/aTransaction.json");
 var should = require("should");
 var transactions;
-var server = require("../server/server");
+var ExpressServer = require("../server/server");
+var server;
 var request = require('supertest');
 var logger = require("../logger/logger")();
 var importResults;
@@ -50,7 +51,8 @@ describe("Integration Tests for transactions modules", function () {
 			importResults = results;
 		})
 		.then (function () {
-			server.start([require("./transactions-router")], function () {
+			server = new ExpressServer([require("./transactions-router")]);
+			server.start(function () {
 				done();	
 			});
 		})

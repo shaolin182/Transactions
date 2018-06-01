@@ -5,8 +5,9 @@ var data = require("../data/transactions.json");
 var should = require("should");
 var importResults;
 var categories;
-var logger = require("../logger/logger")();
-var server = require("../server/server");
+var logger = require("../logger/logger");
+var ExpressServer = require("../server/server");
+var server;
 var request = require('supertest');
 
 describe("Integration Tests for categories modules", function () {
@@ -49,7 +50,8 @@ describe("Integration Tests for categories modules", function () {
 			importResults = results;
 		})
 		.then (function () {
-			server.start([require("./categories-router")], function () {
+			server = new ExpressServer([require("./categories-router")]);
+			server.start(function () {
 				done();	
 			});
 		})

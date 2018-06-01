@@ -6,7 +6,8 @@ var should = require("should");
 
 describe ('Unit tests for server module', function () {
 
-	var expressServer = require("../server/server");
+	var ExpressServer = require("../server/server");
+	var server;
 	var logger;
 	var next;
 
@@ -18,7 +19,8 @@ describe ('Unit tests for server module', function () {
 			"log" : sinon.spy()
 		}
 		next = sinon.spy();
-		expressServer.init(logger);
+		server = new ExpressServer(null);
+		server.logger = logger;
 		done();
 	})
 
@@ -29,12 +31,12 @@ describe ('Unit tests for server module', function () {
 				path : "/test"
 			};
 			var res = {};
-			expressServer.logIncomingRequest(req, res, next);
+			server.logIncomingRequest(req, res, next);
 
 			assert(next.calledOnce, "'Next' function should be called once");
 			assert(logger.log.calledOnce, "'log' function should be called once");
-			assert.equal(logger.log.args[0][0], "debug", "level mode should be debug");
-			logger.log.args[0][1].should.containEql(req.path);
+			assert.equal(logger.log.args[0][1], "debug", "level mode should be debug");
+			logger.log.args[0][0].should.containEql(req.path);
 
 			done();
 		});
@@ -53,11 +55,11 @@ describe ('Unit tests for server module', function () {
 
 			res.status.returns(res);
 
-			expressServer.handleUnknownPath(req, res, next);
+			server.handleUnknownPath(req, res, next);
 
 			assert(logger.log.calledOnce, "'log' function should be called once");
-			assert.equal(logger.log.args[0][0], "error", "level mode should be error");
-			logger.log.args[0][1].should.containEql(req.path);
+			assert.equal(logger.log.args[0][1], "error", "level mode should be error");
+			logger.log.args[0][0].should.containEql(req.path);
 
 			res.send.calledOnce.should.be.true("Send function should be called once");
 			res.status.calledOnce.should.be.true("Status function should be called once");
@@ -78,7 +80,7 @@ describe ('Unit tests for server module', function () {
 				setHeader : function () {}
 			})
 
-			expressServer.handleHeader(req, res, next);
+			server.handleHeader(req, res, next);
 
 			res.setHeader.callCount.should.be.eql(4);
 			res.setHeader.getCall(0).args[0].should.be.eql("Access-Control-Allow-Origin");

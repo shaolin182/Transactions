@@ -6,7 +6,8 @@ var should = require("should");
 var importResults;
 var stats;
 var logger = require("../logger/logger")();
-var server = require("../server/server");
+var ExpressServer = require("../server/server");
+var server;
 var request = require('supertest');
 
 describe("Integration Tests for stats modules", function () {
@@ -49,7 +50,8 @@ describe("Integration Tests for stats modules", function () {
 			importResults = results;
 		})
 		.then (function () {
-			server.start([require("./stats-router")], function () {
+			server = new ExpressServer([require("./stats-router")]);
+			server.start(function () {
 				done();	
 			});
 		})
