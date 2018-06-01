@@ -18,7 +18,8 @@ var request = require('supertest');
 /*
 * Server module to test
 */
-var expressServer = require("../server/server");
+var ExpressServer = require("../server/server");
+var server;
 
 /*
 * Module for building express application
@@ -54,17 +55,19 @@ describe ("End to end test for server module", function () {
 			throw new Error("Unexpected Error");
 		});
 
+		server = new ExpressServer([expressRouter]);
+
 		// Mock function used in server module
-		logIncomingRequest = sinon.stub(expressServer, 'logIncomingRequest');
+		logIncomingRequest = sinon.stub(server, 'logIncomingRequest');
 		logIncomingRequest.callsArg(2);
 
-		handleHeader = sinon.stub(expressServer, 'handleHeader');
+		handleHeader = sinon.stub(server, 'handleHeader');
 		handleHeader.callsArg(2);
 
-		logResponseTime = sinon.stub(expressServer, 'logResponseTime');
+		logResponseTime = sinon.stub(server, 'logResponseTime');
 		logResponseTime.callsArg(2);
 
-		handleUnknownPath = sinon.stub(expressServer, 'handleUnknownPath');
+		handleUnknownPath = sinon.stub(server, 'handleUnknownPath');
 		handleUnknownPath.callThrough();
 
 		done();
@@ -74,16 +77,16 @@ describe ("End to end test for server module", function () {
 	* Test that intented request always called right middlewares
 	*/
 	it("should ensure that all middleware are correctly called when request is fine" , function (done) {
-		expressServer.start(expressRouter, function () {
-			request(expressServer.getInstance())
+		server.start(function () {
+			request(server.getInstance())
 			.get('/')
 			.expect(200)
 			.end(function (err, res) {
 				if (err) return err;
 
-				expressServer.logIncomingRequest.callCount.should.be.eql(1, '"logIncomingRequest" function should always been called once');
-				expressServer.handleHeader.callCount.should.be.eql(1, '"handleHeader" function should always been called once');
-				expressServer.logResponseTime.callCount.should.be.eql(1, '"logResponseTime" function should always been called once');		
+				server.logIncomingRequest.callCount.should.be.eql(1, '"logIncomingRequest" function should always been called once');
+				server.handleHeader.callCount.should.be.eql(1, '"handleHeader" function should always been called once');
+				server.logResponseTime.callCount.should.be.eql(1, '"logResponseTime" function should always been called once');		
 
 				sinon.assert.callOrder(logIncomingRequest, handleHeader, logResponseTime);
 
@@ -96,17 +99,17 @@ describe ("End to end test for server module", function () {
 	* Test that unintented request always called right middlewares and return an http 500 error
 	*/
 	it("should ensure that an error is sent when request is unintented", function (done) {
-		expressServer.start(expressRouter, function () {
-			request(expressServer.getInstance())
+		server.start(function () {
+			request(server.getInstance())
 			.get('/fakeRequest')
 			.expect(500)
 			.end(function (err, res) {
 				if (err) return err;
 
-				expressServer.logIncomingRequest.callCount.should.be.eql(1, '"logIncomingRequest" function should always been called once');
-				expressServer.handleHeader.callCount.should.be.eql(1, '"handleHeader" function should always been called once');
-				expressServer.logResponseTime.callCount.should.be.eql(1, '"logResponseTime" function should always been called once');		
-				expressServer.handleUnknownPath.callCount.should.be.eql(1, '"handleUnknownPath" function should always been called once');
+				server.logIncomingRequest.callCount.should.be.eql(1, '"logIncomingRequest" function should always been called once');
+				server.handleHeader.callCount.should.be.eql(1, '"handleHeader" function should always been called once');
+				server.logResponseTime.callCount.should.be.eql(1, '"logResponseTime" function should always been called once');		
+				server.handleUnknownPath.callCount.should.be.eql(1, '"handleUnknownPath" function should always been called once');
 
 				sinon.assert.callOrder(logIncomingRequest, handleHeader, logResponseTime, handleUnknownPath);
 
@@ -121,16 +124,16 @@ describe ("End to end test for server module", function () {
 	* Test that intented request which throws an exception always called right middlewares and return an http 500 error
 	*/
 	it("should ensure that an error is sent when request throws an error", function (done) {
-		expressServer.start(expressRouter, function () {
-			request(expressServer.getInstance())
+		server.start(function () {
+			request(server.getInstance())
 			.get('/exception')
 			.expect(500)
 			.end(function (err, res) {
 				if (err) return err;
 
-				expressServer.logIncomingRequest.callCount.should.be.eql(1, '"logIncomingRequest" function should always been called once');
-				expressServer.handleHeader.callCount.should.be.eql(1, '"handleHeader" function should always been called once');
-				expressServer.logResponseTime.callCount.should.be.eql(1, '"logResponseTime" function should always been called once');		
+				server.logIncomingRequest.callCount.should.be.eql(1, '"logIncomingRequest" function should always been called once');
+				server.handleHeader.callCount.should.be.eql(1, '"handleHeader" function should always been called once');
+				server.logResponseTime.callCount.should.be.eql(1, '"logResponseTime" function should always been called once');		
 
 				sinon.assert.callOrder(logIncomingRequest, handleHeader, logResponseTime);
 
@@ -146,16 +149,16 @@ describe ("End to end test for server module", function () {
 	* Close server
 	*/
 	afterEach(function () {
-		expressServer.getInstance().close();
+		server.getInstance().close();
 	});
 
 	/**
 	* Restore functions
 	*/
 	afterEach(function () {
-		expressServer.logIncomingRequest.restore();
-		expressServer.handleHeader.restore();
-		expressServer.logResponseTime.restore();
-		expressServer.handleUnknownPath.restore();
+		server.logIncomingRequest.restore();
+		server.handleHeader.restore();
+		server.logResponseTime.restore();
+		server.handleUnknownPath.restore();
 	});
 });

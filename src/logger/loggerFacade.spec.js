@@ -6,16 +6,14 @@ var should = require("should");
 
 describe ("Unit Test for loggerFacade module", function ()  {
 
-	var LoggerFacade = require("./loggerFacade");
+	var logger = require("./loggerFacade");
 
-	var loggerImpl, logger;
+	var loggerImpl;
 
 	/*
 	* Before each tests, mock logger in order to check it it had been called
-	* Initialize LoggerFacade
 	*/
 	beforeEach(function (done) {	
-		logger = new LoggerFacade();
 
 		// Stub Log Implementation
 		loggerImpl = {
@@ -43,6 +41,11 @@ describe ("Unit Test for loggerFacade module", function ()  {
 		assert.equal(loggerImpl.log.args[0][0], "debug", "level mode should be debug");
 		assert.equal(loggerImpl.log.args[0][1], "test Message", "message should be 'test Message'");
 
+		done();
+	});
+
+	afterEach(function (done) {
+		logger.getLoggerImpl.restore();
 		done();
 	});
 });

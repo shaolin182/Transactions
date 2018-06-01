@@ -30,7 +30,7 @@ var db;
 /*
 * Logger
 */
-var logger = require("../logger/logger")();
+var logger = require("../logger/loggerFacade");
 
 /*
 * Connect to a database
@@ -47,10 +47,10 @@ var connect = function(mode) {
 		db = monk(uri);
 
 		db.then(function () {
-			logger.log("info", "Connected to database");
+			logger.log("Connected to database", "info");
 			resolve();
 		}).catch(function (err) {
-			logger.log("error", "Error occured while connecting to database : " + err);
+			logger.log("Error occured while connecting to database : " + err, "error" );
 			reject(err);
 		})			
 	});
@@ -76,11 +76,11 @@ var cleanDatabase = function (collection) {
 
 		db.get(collection).drop()
 		.then (function (results) {
-			logger.log("info", "Collection dropped");
+			logger.log("Collection dropped", "info");
 			resolve(results);
 		})
 		.catch (function (err) {
-			logger.log("error", "occured while dropping collection : " + err);
+			logger.log("occured while dropping collection : " + err, "error");
 			reject(err);
 		})
 	});
@@ -99,11 +99,11 @@ var cleanDatabase = function (collection) {
 
  		db.get(collection).insert(data)
  		.then(function (results) {
- 			logger.log("info", "Collection imported");
+ 			logger.log("Collection imported", "info");
  			resolve(results);
  		})
  		.catch (function (err) {
- 			logger.log ("error", "Error occured while inserting data into collection : " + err);
+ 			logger.log ("Error occured while inserting data into collection : " + err, "error");
  			reject(err);
  		})
  	});

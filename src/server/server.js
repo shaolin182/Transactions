@@ -4,20 +4,33 @@
 // Web server is built thanks to Express framework.
 // It requires a router module as a parameter for handling routing path
 
-var express = require("express");
-
-var server;
+/*
+* Framework used for creating web server
+*/
+const express = require("express");
 
 /*
-* Logger
+* Current instance of ExpressServer class
 */
-var logger = require("../logger/logger")();
+var self;
+
+/*
+* Constructor 
+* @param : 
+* router : contains an array of router module specific to an application. this param can be a single module router or an array of module router
+*/
+var ExpressServer = function(router) {
+	this.router = router;
+	self = this;
+}
+
+ExpressServer.prototype.logger = require("../logger/loggerFacade");
 
 /*
 * Middleware use for logging every request received on node js server
 */
-function logIncomingRequest (req, res, next) {
-	logger.log('debug', 'Received Request on ' + req.path);
+ExpressServer.prototype.logIncomingRequest = function (req, res, next) {
+	self.logger.log('Received Request on ' + req.path, "debug");
 	next();
 };
 
@@ -25,11 +38,11 @@ function logIncomingRequest (req, res, next) {
 * Middleware use for logging response time of http request
 * It adds a listener on finish event for capturing response time
 */
-function logResponseTime(req, res, next) {
+ExpressServer.prototype.logResponseTime = function (req, res, next) {
 	var startTime = Date.now();
 	res.on('finish', function() {
 		var duration = Date.now() - startTime;
-		logger.log('info', 'Request on ' + req.path, {"duration" : duration});
+		self.logger.log('Request on ' + req.path, {"duration" : duration}, "info");
 	});
 	next();
 }
@@ -37,7 +50,7 @@ function logResponseTime(req, res, next) {
 /**
 * Middleware use for allowing request from client side
 */
-function handleHeader(req, res, next) {
+ExpressServer.prototype.handleHeader = function (req, res, next) {
 
 	// Website you wish to allow to connect
 	res.setHeader('Access-Control-Allow-Origin', process.env.ACCESS_CONTROL_ALLOW_ORIGIN);
@@ -58,50 +71,37 @@ function handleHeader(req, res, next) {
 /*
 * Middleware use for handling behavior when receiving a request with a path not handled by application
 */
-function handleUnknownPath (req, res, next){
-	logger.log('error', 'Unknown path : ' + req.path);
-
+ExpressServer.prototype.handleUnknownPath = function(req, res, next){
+	self.logger.log('Unknown path : ' + req.path, "error");
 	res.status(500).send({"error" : "Page not Found"});
 };
-
-/*
-* Init server module
-*
-* @param : 
-* loggerFwk : logger framework we are currently using
-* routerModule : list of router module in application
-*/
-function init(loggerImpl, routerModule) {
-	logger = loggerImpl;
-}
 
 /*
 * Start web server and load basic middleware for handling request
 * Also load specific module router according to the application
 *
 * param :
-* router : contains an array of router module specific to an application. this param can be a single module router or an array of module router
+* done : callback function
 */
-function start(router, done){
-
+ExpressServer.prototype.start = function(done){
 	var app = express();
 
 	// use middleware for logging all request
-	app.use(exports.logIncomingRequest);
-	app.use(exports.handleHeader);
-	app.use(exports.logResponseTime);
+	app.use(self.logIncomingRequest);
+	app.use(self.handleHeader);
+	app.use(self.logResponseTime);
 
 	// Handle specific router module
-	if (!Array.isArray(router)) {
-		router = [router];
+	if (!Array.isArray(self.router)) {
+		self.router = [self.router];
 	}
 
-	router.forEach(function (currentElement) {
+	self.router.forEach(function (currentElement) {
 		app.use(currentElement);	
 	})
 
 	// use middleware for handling unknown path
-	app.use(exports.handleUnknownPath);
+	app.use(self.handleUnknownPath);
 
 	// use middleware for handling exceptions
 	app.use(function (err, req, res, next) {
@@ -109,21 +109,14 @@ function start(router, done){
 	})
 
 	// start server
-	server = app.listen(process.env.SERVER_PORT, function () {
-		logger.log ('info', 'Server started');
+	self.server = app.listen(process.env.SERVER_PORT, function () {
+		self.logger.log ('Server started', 'info');
 		done();
 	});
-
 }
 
-function getInstance() {
-	return server;
+ExpressServer.prototype.getInstance = function() {
+	return self.server;
 }
 
-exports.start = start;
-exports.getInstance = getInstance;
-exports.init = init;
-exports.logIncomingRequest = logIncomingRequest;
-exports.handleUnknownPath = handleUnknownPath;
-exports.handleHeader = handleHeader;
-exports.logResponseTime = logResponseTime;
+module.exports = ExpressServer;
