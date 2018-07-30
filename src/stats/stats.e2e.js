@@ -80,15 +80,15 @@ describe("Integration Tests for stats modules", function () {
 		it("Retrieving Stats / Total Cost By month", function (done) {
 
 			request(server.getInstance())
-			.get('/stats/totalCostByMonth')
+			.post('/stats/totalCostByMonth')
 			.expect(200)
 			.end(function (err, res) {
 				if (err) return done(err);
 
 				res.body.length.should.eql(3);
-				res.body[0].costByMonth.should.eql(-170935);
-				res.body[1].costByMonth.should.eql(-28910);
-				res.body[2].costByMonth.should.eql(1090);
+				res.body[0].total.should.eql(-170935);
+				res.body[1].total.should.eql(-28910);
+				res.body[2].total.should.eql(1090);
 				done();
 			});
 		});
