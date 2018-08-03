@@ -24,7 +24,7 @@ var getTransactions = function (id, done) {
 }
 
 var getAllTransactions = function (done) {
-	transactions.find({})
+	transactions.find({}, {sort: {date:-1}})
 	.then(function(results){
 		results.forEach(function (currentElement) {
 			currentElement.income = currentElement.income / 100;
