@@ -3,38 +3,90 @@ var db = require("../database/mongodb");
 // Getting Transactions collection
 var transactions = db.getInstance().get("transactions");
 
-var getTotalCostByMonth = function (done) {
+const sortedByYearAndMonth = {"_id.year":1, "_id.month":1};
+const sortedByYear = {"_id.year":1};
+const sortedByID = {"_id":1};
 
-	var group = {
+/*
+For each month, return the sum of 'cost' property
+ */
+var getTotalCostByMonth = function (match, done) {
+	const group = {
 		_id: {
 			year : { $year: "$date" },        
 			month : { $month: "$date" },        
 		},
-		costByMonth: { $sum: "$cost" }
+		total: { $sum: "$cost" }
 	}
 
-	var sort = {"_id.year":1, "_id.month":1};
+	aggregateData(match, group, sortedByYearAndMonth, done);
+};
 
-	var match = {};
+/*
+For each year, return the sum of 'cost' property
+ */
+var getTotalCostByYear = function (match, done) {
+	const group = {
+		_id: {
+			year : { $year: "$date" },        
+		},
+		total : { $sum: "$cost" }
+	}
 
-	aggregateData(match, group, sort, done);
-}
+	aggregateData(match, group, sortedByYear, done);
+};
+
+/*
+For each category, return the sum of 'cost' property
+ */
+var getTotalCostByCategory = function (match, done) {
+	const group = {
+		_id: "$category.category",
+		total: { $sum: "$cost" }
+	}
+
+	aggregateData(match, group, sortedByID, done);
+};
+
+/*
+For each category, return the sum of 'cost' property by month
+ */
+var getTotalCostByCategoryAndMonth = function (match, done) {
+	const group = {
+		_id: {
+			year : { $year: "$date" },        
+			month : { $month: "$date" }, 
+			category : "$category.category"       
+		},
+		total: { $sum: "$cost" }
+	}
+
+	aggregateData(match, group, sortedByYearAndMonth, done);
+};
+
+/*
+For each account, return the sum of 'outcome' property by month
+ */
+var getTotalCostByAccountAndMonth = function (match, done) {
+	const group = {
+		_id: {
+			year : { $year: "$date" },        
+			month : { $month: "$date" }, 
+			accountType : "$bankaccount.category"       
+		},
+		total: { $sum: "$outcome" }
+	}
+
+	match.category = {$exists:true};
+
+	aggregateData(match, group, sortedByYearAndMonth, done);
+};
+
 
 /**
 * Request database instance	for retrieving aggregating data
 */
 var aggregateData = function (match, group, sort, done) {
-
-	if (match && match.date && match.date.$gt) {
-		match.date.$gt = new Date(match.date.$gt);
-	}
-	
-
-	if (match && match.date && match.date.$lt) {
-		match.date.$lt = new Date(match.date.$lt);	
-	}
-	
-
 	transactions.aggregate([
 		{ $match : match},
 		{ $group : group},
@@ -49,5 +101,8 @@ var aggregateData = function (match, group, sort, done) {
 }
 
 exports.getTotalCostByMonth = getTotalCostByMonth;
+exports.getTotalCostByYear = getTotalCostByYear;
+exports.getTotalCostByCategory = getTotalCostByCategory;
+exports.getTotalCostByCategoryAndMonth = getTotalCostByCategoryAndMonth;
+exports.getTotalCostByAccountAndMonth = getTotalCostByAccountAndMonth;
 exports.aggregateData = aggregateData;
-
