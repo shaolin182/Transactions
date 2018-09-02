@@ -203,7 +203,7 @@ describe("Integration Tests for transactions modules", function () {
 	/**
 	* Integration tests for HTTP request PUT /transactions/:id
 	*/
-	describe('PUT /transactions/:id', function () {
+	describe('POST /transactions/:id', function () {
 
 		/*
 		* Test that put method, update a new record in database with correct data.
@@ -215,7 +215,7 @@ describe("Integration Tests for transactions modules", function () {
 			var aTransaction = {"id":currentId, "aNewProperty":"test"};
 
 			request(server.getInstance())
-			.put('/transactions/' + currentId)
+			.post('/transactions/' + currentId)
 			.send(aTransaction)
 			.expect(200)
 			.end (function (err, res) {
