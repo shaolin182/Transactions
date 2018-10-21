@@ -2,9 +2,21 @@ pipeline {
 	agent any
 
 	stages {
-		stage ("First Step"){
+		stage ("Build"){
 			steps {
-				sh ' echo "First Step"'
+				echo "Build"
+			}
+		}
+
+		stage ("Test"){
+			steps {
+				echo "Build"
+			}
+		}
+
+		stage ("Deploy"){
+			steps {
+				echo "Build"
 			}
 		}
 	}
