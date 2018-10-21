@@ -6,6 +6,7 @@ var transactions = db.getInstance().get("transactions");
 const sortedByYearAndMonth = {"_id.year":1, "_id.month":1};
 const sortedByYear = {"_id.year":1};
 const sortedByID = {"_id":1};
+const sortedbyTotal = {"total":1}
 
 /*
 For each month, return the sum of 'cost' property
@@ -45,7 +46,7 @@ var getTotalCostByCategory = function (match, done) {
 		total: { $sum: "$cost" }
 	}
 
-	aggregateData(match, group, sortedByID, done);
+	aggregateData(match, group, sortedbyTotal, done);
 };
 
 /*
@@ -62,6 +63,21 @@ var getTotalCostByCategoryAndMonth = function (match, done) {
 	}
 
 	aggregateData(match, group, sortedByYearAndMonth, done);
+};
+
+/*
+For each category, return the sum of 'cost' property by year
+ */
+var getTotalCostByCategoryAndYear = function (match, done) {
+	const group = {
+		_id: {
+			year : { $year: "$date" },        
+			category : "$category.category"       
+		},
+		total: { $sum: "$cost" }
+	}
+
+	aggregateData(match, group, sortedByYear, done);
 };
 
 /*
@@ -104,5 +120,6 @@ exports.getTotalCostByMonth = getTotalCostByMonth;
 exports.getTotalCostByYear = getTotalCostByYear;
 exports.getTotalCostByCategory = getTotalCostByCategory;
 exports.getTotalCostByCategoryAndMonth = getTotalCostByCategoryAndMonth;
+exports.getTotalCostByCategoryAndYear = getTotalCostByCategoryAndYear;
 exports.getTotalCostByAccountAndMonth = getTotalCostByAccountAndMonth;
 exports.aggregateData = aggregateData;
