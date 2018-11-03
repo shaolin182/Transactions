@@ -7,7 +7,7 @@ pipeline {
 				sh 'docker build -t transactions:0.1.${BUILD_NUMBER} .'
 				sh 'docker create transactions:0.1.${BUILD_NUMBER}'
 
-				sh 'docker cp ${docker ps -a --filter "ancestor=^/transactions:0.1.${BUILD_NUMBER}$"}:/tmp/unittest.xml ./'
+				sh 'docker cp $(docker ps -a --filter "ancestor=^/transactions:0.1.${BUILD_NUMBER}$"):/tmp/unittest.xml ./'
 			}
 		}
 
