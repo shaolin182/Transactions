@@ -7,13 +7,13 @@ pipeline {
 				sh 'docker build -t transactions:0.1.${BUILD_NUMBER} .'
 				sh 'docker create --name=transactions_0.1.${BUILD_NUMBER} transactions:0.1.${BUILD_NUMBER}'
 
-				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp/unittest.xml /tmp/unittest.xml'
+				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp/unittest.xml .'
 			}
 		}
 
 		stage ("Test"){
 			steps {
-				junit '/tmp/unittest.xml'
+				junit './unittest.xml'
 			}
 		}
 
