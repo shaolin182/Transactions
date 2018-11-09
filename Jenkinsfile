@@ -13,7 +13,7 @@ pipeline {
 
 		stage ("Test"){
 			steps {
-				junit './unittest.xml'
+				junit '/home/jenkins/workspace/transactions/unittest.xml'
 			}
 		}
 
