@@ -13,6 +13,7 @@ pipeline {
 
 		stage ("Test"){
 			steps {
+				sh 'touch unittest.xml'
 				junit 'unittest.xml'
 			}
 		}
