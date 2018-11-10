@@ -27,7 +27,6 @@ RUN npm install --only=dev
 
 # Run code quality tools
 RUN ./node_modules/gulp/bin/gulp.js unitTest
-RUN chmod 777  /tmp/unittest.xml
 
 # 3rd stage, release
 FROM base as release
