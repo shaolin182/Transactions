@@ -29,6 +29,7 @@ RUN npm install --only=dev
 RUN npm test
 RUN npm run-script coverage
 RUN npm run-script coverage-report
+RUN npm run-script lint;exit 0
 
 # 3rd stage, release
 FROM base as release

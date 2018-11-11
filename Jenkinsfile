@@ -11,6 +11,19 @@ pipeline {
 			}
 		}
 
+		stage ("Linter"){
+			steps {
+				step([$class: 'WarningsPublisher',
+					parserConfigurations: [[
+						parserName: 'ESLint',
+						pattern: 'eslint.xml'
+					]],
+					unstableTotalAll: '0',
+					usePreviousBuildAsReference: true
+				])
+			}
+		}
+
 		stage ("Test"){
 			steps {
 				sh 'touch unittest.xml'
