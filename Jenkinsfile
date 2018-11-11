@@ -7,7 +7,7 @@ pipeline {
 				sh 'docker build -t transactions:0.1.${BUILD_NUMBER} .'
 				sh 'docker create --name=transactions_0.1.${BUILD_NUMBER} transactions:0.1.${BUILD_NUMBER}'
 
-				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp/unittest.xml .'
+				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp/* .'
 			}
 		}
 
@@ -15,6 +15,12 @@ pipeline {
 			steps {
 				sh 'touch unittest.xml'
 				junit 'unittest.xml'
+			}
+		}
+
+		stage ("Code coverage"){
+			steps {
+				step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: '**/cobertura-coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
 			}
 		}
 

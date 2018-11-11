@@ -26,7 +26,9 @@ FROM base as test
 RUN npm install --only=dev
 
 # Run code quality tools
-RUN ./node_modules/gulp/bin/gulp.js unitTest
+RUN npm test
+RUN npm run-script coverage
+RUN npm run-script coverage-report
 
 # 3rd stage, release
 FROM base as release
