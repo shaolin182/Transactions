@@ -15,7 +15,7 @@ pipeline {
 			steps {
 				step([$class: 'WarningsPublisher',
 					parserConfigurations: [[
-						parserName: 'ESLint',
+						parserName: 'JSLint',
 						pattern: 'eslint.xml'
 					]],
 					unstableTotalAll: '0',
