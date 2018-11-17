@@ -7,7 +7,7 @@ pipeline {
 				sh 'docker build -t transactions:0.1.${BUILD_NUMBER} .'
 				sh 'docker create --name=transactions_0.1.${BUILD_NUMBER} transactions:0.1.${BUILD_NUMBER}'
 
-				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp/ .'
+				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp .'
 			}
 		}
 
