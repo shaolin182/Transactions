@@ -7,7 +7,7 @@ pipeline {
 				sh 'docker build -t transactions:0.1.${BUILD_NUMBER} .'
 				sh 'docker create --name=transactions_0.1.${BUILD_NUMBER} transactions:0.1.${BUILD_NUMBER}'
 
-				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp .'
+				sh 'docker cp $(docker ps -a -q --filter "name=^/transactions_0.1.${BUILD_NUMBER}$"):/tmp/ .'
 			}
 		}
 
@@ -16,7 +16,7 @@ pipeline {
 				step([$class: 'WarningsPublisher',
 					parserConfigurations: [[
 						parserName: 'JSLint',
-						pattern: 'eslint.xml'
+						pattern: 'tmp/eslint.xml'
 					]],
 					unstableTotalAll: '0',
 					usePreviousBuildAsReference: true
@@ -26,8 +26,8 @@ pipeline {
 
 		stage ("Test"){
 			steps {
-				sh 'touch unittest.xml'
-				junit 'unittest.xml'
+				sh 'touch tmp/unittest.xml'
+				junit 'tmp/unittest.xml'
 			}
 		}
 
