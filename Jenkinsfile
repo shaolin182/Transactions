@@ -15,6 +15,7 @@ pipeline {
 
 		stage ("Linter"){
 			steps {
+				sh "sed -i -e 's/usr\/src\/app/${WORKSPACE}\/${JOB_NAME}/g' /tmp/eslint.xml"
 				step([$class: 'WarningsPublisher',
 					parserConfigurations: [[
 						parserName: 'JSLint',
