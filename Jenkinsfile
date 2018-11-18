@@ -13,7 +13,7 @@ pipeline {
 
 		stage ("Linter"){
 			steps {
-				sh "sed -i -e \\'s/usr\\/src\\/app/${WORKSPACE}/g\\' /tmp/eslint.xml"
+				sh "sed -i -e \\'s|usr/src/app|${WORKSPACE}|g\\' /tmp/eslint.xml"
 				step([$class: 'WarningsPublisher',
 					parserConfigurations: [[
 						parserName: 'JSLint',
