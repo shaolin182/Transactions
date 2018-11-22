@@ -13,7 +13,7 @@ pipeline {
 
 		stage ("Linter"){
 			steps {
-				sh "sed -i -e \'s|usr/src/app|${WORKSPACE}|g\' ./tmp/eslint.xml"
+				sh "sed -i -e \'s|/usr/src/app|${WORKSPACE}|g\' ./tmp/eslint.xml"
 				step([$class: 'WarningsPublisher',
 					parserConfigurations: [[
 						parserName: 'JSLint',
@@ -38,9 +38,13 @@ pipeline {
 			}
 		}
 
-		stage ("Deploy"){
+		stage ("Publish"){
 			steps {
-				echo "Build"
+				withCredentials([usernamePassword(credentialsId: '${DOCKER_CREDENTIALS_ID}', usernameVariable: '${DOCKER_USERNAME}', passwordVariable: '${DOCKER_PASSWORD}')]) {
+					sh 'docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}'
+					sh 'docker tag transactions:0.1.${BUILD_NUMBER} transactions/backoffice-nodejs:${VERSION}'
+					sh 'docker push transactions/backoffice-nodejs:${VERSION}'
+				}			
 			}
 		}
 	}
