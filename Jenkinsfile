@@ -42,8 +42,8 @@ pipeline {
 			steps {
 				withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 					sh 'docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}'
-					sh 'docker tag transactions:0.1.${BUILD_NUMBER} transactions/backoffice-nodejs:${VERSION}'
-					sh 'docker push transactions/backoffice-nodejs:${VERSION}'
+					sh 'docker tag transactions:0.1.${BUILD_NUMBER} ${DOCKER_NS}/transactions-backoffice-nodejs:${VERSION}'
+					sh 'docker push ${DOCKER_NS}/transactions-backoffice-nodejs:${VERSION}'
 				}			
 			}
 		}
