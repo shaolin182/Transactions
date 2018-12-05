@@ -40,7 +40,7 @@ pipeline {
 
 		stage ("Publish"){
 			steps {
-				withCredentials([usernamePassword(credentialsId: '${DOCKER_CREDENTIALS_ID}', usernameVariable: '${DOCKER_USERNAME}', passwordVariable: '${DOCKER_PASSWORD}')]) {
+				withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 					sh 'docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}'
 					sh 'docker tag transactions:0.1.${BUILD_NUMBER} transactions/backoffice-nodejs:${VERSION}'
 					sh 'docker push transactions/backoffice-nodejs:${VERSION}'
