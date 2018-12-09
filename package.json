@@ -4,8 +4,11 @@
   "description": "Account manager",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha  -g .*integration.* --reporter spec",
-    "start": "node src/index.js"
+    "test": "./node_modules/mocha/bin/mocha './src/**/*.spec.js' --reporter mocha-junit-reporter --reporter-options mochaFile=/tmp/unittest.xml",
+    "start": "node src/index.js",
+    "coverage": "nyc --all ./node_modules/.bin/mocha './src/**/*.spec.js'",
+    "coverage-report": "nyc report",
+    "lint": "./node_modules/eslint/bin/eslint.js -o /tmp/eslint.xml -f jslint-xml './src/**/*.js'; exit 0"
   },
   "repository": {
     "type": "git",
@@ -15,9 +18,13 @@
   "license": "ISC",
   "devDependencies": {
     "del": "^2.2.2",
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0",
     "gulp": "^3.9.1",
     "gulp-mocha": "^4.1.0",
     "mocha": "^3.2.0",
+    "mocha-junit-reporter": "^1.18.0",
+    "nyc": "^13.1.0",
     "should": "^11.2.0",
     "should-sinon": "0.0.6",
     "sinon": "^4.4.2",

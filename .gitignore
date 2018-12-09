@@ -3,3 +3,4 @@
 /logs
 /data
 .env
+.nyc_output

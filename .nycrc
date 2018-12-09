@@ -1,0 +1,11 @@
+{
+    "exclude": [
+      "**/*.spec.js", 
+      "data", 
+      "node_modules", 
+      "test"
+    ],
+    "include": ["src/**/*.js"], 
+    "reporter": ["cobertura"], 
+    "report-dir": "/tmp/code-coverage/"
+}
