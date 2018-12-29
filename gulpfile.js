@@ -40,8 +40,10 @@ gulp.task('e2eTest', function() {
 gulp.task('unitTest', function() {
 	return gulp.src(['src/**/*spec*.js'], { read: false })
 	.pipe(mocha({
-		reporter: 'spec',
-		exit: true,
+		reporter: 'mocha-junit-reporter',
+		reporterOptions: {
+			mochaFile: '/tmp/unittest.xml'
+		},
 		globals: {
 			should: require('should')
 		}

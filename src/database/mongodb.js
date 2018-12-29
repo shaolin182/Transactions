@@ -38,23 +38,24 @@ var logger = require("../logger/loggerFacade");
 * param
 * mode : indicates if we want to connect in PROD mode or TEST mode
 */
-var connect = function(mode) {
-	return new Promise(function (resolve, reject) {
+const connect = function(mode) {
+	return new Promise(function(resolve, reject) {
 		var uri = mode === exports.MODE_TEST ? TEST_URI : PROD_URI
-
 		if (db) resolve();
 
 		db = monk(uri);
 
-		db.then(function () {
-			logger.log("Connected to database", "info");
+		db.then(function() {
+			logger.log('Connected to database', 'info');
 			resolve();
-		}).catch(function (err) {
-			logger.log("Error occured while connecting to database : " + err, "error" );
+		}).catch(function(err) {
+			logger.log('Error occured while connecting to database : ' + 
+				err, 'error' );
+			db = undefined;
 			reject(err);
-		})			
+		});
 	});
-}
+};
 
 /*
 * Return the current instance of database
