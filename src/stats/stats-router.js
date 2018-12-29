@@ -64,4 +64,10 @@ router.post("/stats/totalCostByAccountAndMonth", function (req, res, next) {
 	});
 });
 
+router.post("/stats/totalCostByCategoryAndYear", function (req, res, next) {
+	stats.getTotalCostByCategoryAndYear(req.body.match, function (err, results) {
+		handleResult(err, res, results);
+	});
+});
+
 module.exports = router;
